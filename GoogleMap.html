@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Задача 2 - Петраки Петров</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            height: 100%;
+        }
+
+    </style>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDNtgH3XILQC21g1QQ5-VaYL57U5fD77w&signed_in=true&callback=initMap">
+    </script>
+
+    <script>
+
+        function initMap() {
+            var directionsDisplay = new google.maps.DirectionsRenderer;
+            var directionsService = new google.maps.DirectionsService;
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 8,
+                center: {lat: 42.706566, lng:  24.952311}
+            });
+            var rendererOptions = {
+                map: map,
+                suppressMarkers : true
+            };
+            directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+            directionsDisplay.setMap(map);
+            var image = 'sklad1.png';
+            ///////////////////////////////////////////////////////
+            // Sofiq
+            var SkladS = ["ечемик","царевица"];
+            var MarkerS = new google.maps.Marker({
+                position: {lat: 42.697840, lng: 23.321670},
+                SkladInfo: SkladS,
+                map: map,
+                icon: image,
+                title:'Click for details'
+            });
+            var infowindow1 = new google.maps.InfoWindow({
+                content:"<b>Склад София</b> " + "<p>Наличност: " +"ечемик "+" и "+"царевица" + "</p>"
+            });
+
+                infowindow1.open(map,MarkerS);
+            google.maps.event.addListener(MarkerS, 'click', function() {
+                infowindow1.open(map,MarkerS);
+            });
+
+            var infoS = MarkerS.position;
+
+            var latS = MarkerS.getPosition().lat();
+            var lngS = MarkerS.getPosition().lng();
+            ///////////////////////////////////////////////////////
+            // Burgas
+            var SkladB = ["пшеница","царевица"];
+            var MarkerB = new google.maps.Marker({
+                position: {lat: 42.504793, lng: 27.462636},
+                SkladInfo: SkladB,
+                map: map,
+                icon: image,
+                title:'Click for details'
+            });
+            var infowindow2 = new google.maps.InfoWindow({
+                content:"<b>Склад Бургас</b> "+"<p>Наличност: " +"пшеница "+" и "+"царевица" + "</p>"
+            });
+
+                infowindow2.open(map,MarkerB);
+            google.maps.event.addListener(MarkerB, 'click', function() {
+                infowindow2.open(map,MarkerB);
+            });
+
+            var infoB = MarkerB.position;
+
+            var latB = MarkerB.getPosition().lat();
+            var lngB = MarkerB.getPosition().lng();
+            ///////////////////////////////////////////////////////
+            //Tyrgovishte
+            var SkladTe = ["слънчоглед","царевица"];
+            var MarkerTe = new google.maps.Marker({
+                position: {lat: 43.249356 , lng: 26.572736},
+                SkladInfo : SkladTe ,
+                map: map,
+                icon: image,
+                title:'Click for details'
+            });
+            var infowindow3 = new google.maps.InfoWindow({
+                content:"<b>Склад Търговище</b> "+"<p>Наличност: " +"слънчоглед "+" и "+"царевица" + "</p>"
+            });
+            google.maps.event.addListener(MarkerTe, 'click', function() {
+                infowindow3.open(map,MarkerTe);
+            });
+
+            var infoTe = MarkerTe.position;
+
+            var latTe = MarkerTe.getPosition().lat();
+            var lngTe = MarkerTe.getPosition().lng();
+            ///////////////////////////////////////////////////////
+            //Plovdiv
+            var SkladP = ["пшеница"];
+            var MarkerP = new google.maps.Marker({
+                SkladInfo: SkladP ,
+                position: {lat: 42.135408 , lng: 24.745290},
+                map: map,
+                icon: image,
+                title:'Click for details'
+
+            });
+            var infowindow4 = new google.maps.InfoWindow({
+                content:"<b>Склад Пловдив</b>"+"<p>Наличност: " +"пшеница "+ "</p>"
+            });
+            google.maps.event.addListener(MarkerP, 'click', function() {
+                infowindow4.open(map,MarkerP);
+            });
+
+            var infoP = MarkerP.position;
+
+            var latP = MarkerP.getPosition().lat();
+            var lngP = MarkerP.getPosition().lng();
+            ///////////////////////////////////////////////////////
+            //Truck
+            google.maps.event.addListener(map, 'click', function (e) {
+
+                //Determine the location where the user has clicked.
+                var location = e.latLng;
+                //Create a marker and placed it on the map.
+                var MarkerT = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    icon: 'truck.png'
+                });
+                map.setCenter(MarkerT.position);
+                MarkerT.setMap(map);
+
+                var info = MarkerT.position;
+
+                var latT = MarkerT.getPosition().lat();
+                var lngT = MarkerT.getPosition().lng();
+
+                        google.maps.event.addListener(MarkerT, 'click', function() {
+                            content: var Tovar = window.prompt("Въведете  товар:", "");
+
+                    if (Tovar == MarkerS.SkladInfo[0] || Tovar == MarkerS.SkladInfo[1] ||
+                            Tovar == MarkerB.SkladInfo[0] || Tovar == MarkerB.SkladInfo[1] ||
+                            Tovar == MarkerTe.SkladInfo[0] || Tovar == MarkerP.SkladInfo[0]||Tovar == MarkerP.SkladInfo[1]) {
+                        window.alert("Товарът е наличен!");
+                        if(Tovar == "царевица") {
+                            if (measure(latTe, lngTe, latT, lngT) > measure(latB, lngB, latT, lngT) ){
+                                calculateAndDisplayRoute(directionsService, directionsDisplay, info, infoB);
+                            }
+                            else if(measure(latS, lngS, latT, lngT) > measure(latB, lngB, latT, lngT)){
+                                calculateAndDisplayRoute(directionsService, directionsDisplay, info, infoTe);
+                            }
+                            else {
+                                calculateAndDisplayRoute(directionsService, directionsDisplay, info, infoS);
+                            }
+                        }
+                        if(Tovar == "слънчоглед")
+                        {
+                            calculateAndDisplayRoute(directionsService, directionsDisplay, info, infoTe);
+                        }
+
+                        if(Tovar == "ечемик")
+                        {
+
+                                calculateAndDisplayRoute(directionsService, directionsDisplay, info, infoS);
+
+                        }
+                        if(Tovar == "пшеница")
+                        {
+                            if (measure(latP, lngP, latT, lngT) > measure(latB, lngB, latT, lngT) ){
+                            calculateAndDisplayRoute(directionsService, directionsDisplay, info, infoB);
+                        }
+                        else {
+                            calculateAndDisplayRoute(directionsService, directionsDisplay, info, infoP);
+                        }
+                        }
+                    }
+                    else {
+                        window.alert("Товарът не е наличен!")
+                    }
+                });
+            });
+            }
+        ///////////////////////////////////////////////////////
+        //calculate And DisplayRoute
+        function calculateAndDisplayRoute(directionsService, directionsDisplay,info, infos) {
+            directionsService.route({
+                origin:info, // Haight.
+                destination:infos,  // Ocean Beach.
+                travelMode: google.maps.TravelMode.DRIVING
+            }, function (response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    directionsDisplay.setDirections(response);
+                } else {
+                    window.alert('Directions request failed due to ' + status);
+                }
+            });
+
+        }
+        function measure(lat1, lon1, lat2, lon2){
+            var R = 6378.137;
+            var dLat = (lat2 - lat1) * Math.PI / 180;
+            var dLon = (lon2 - lon1) * Math.PI / 180;
+            var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                    Math.sin(dLon/2) * Math.sin(dLon/2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            var d = R * c;
+            return d *1000 ; // meters
+        }
+    </script>
+</head>
+<body>
+<div id="map"></div>
+</body>
+</html>
